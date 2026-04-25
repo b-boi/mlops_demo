@@ -1,0 +1,42 @@
+stages:
+  - terraform
+  - build
+  - train
+  - deploy
+
+variables:
+  AWS_REGION: eu-west-2
+
+# 🏗️ Terraform
+terraform:
+  stage: terraform
+  script:
+    - terraform init
+    - terraform fmt
+    - terraform validate
+    - terraform plan
+    - terraform apply -auto-approve
+
+# 🐳 Build ML API
+build:
+  stage: build
+  script:
+    - docker build -t ml-app .
+    - docker save ml-app > ml-app.tar
+  artifacts:
+    paths:
+      - ml-app.tar
+
+# 🤖 Train model (batch)
+train:
+  stage: train
+  script:
+    - pip install pandas scikit-learn boto3
+    - python ml/train.py
+
+# 🚀 Deploy to EC2
+deploy:
+  stage: deploy
+  script:
+    - scp ml-app.tar ec2-user@EC2_IP:/home/ec2-user/
+    - ssh ec2-user@EC2_IP "docker load < ml-app.tar && docker run -d -p 80:80 ml-app"
