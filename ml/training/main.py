@@ -3,6 +3,9 @@ import pandas as pd
 from sklearn.ensemble import IsolationForest
 import joblib
 
+## Use main.py for live run to collect logs 
+# for ml pipeline training.
+
 # Dummy dataset (replace with S3 load)
 data = pd.DataFrame({"latency": [10,20,30,100,200]})
 

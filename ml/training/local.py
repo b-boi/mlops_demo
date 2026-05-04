@@ -4,6 +4,10 @@ from sklearn.ensemble import IsolationForest
 from pydantic import BaseModel
 import logging
 
+## N.B Use local.py to run a local simulated log creation 
+# for the ml pipeline
+ 
+
 app = FastAPI()
 
 # Define request body properly (important!)
